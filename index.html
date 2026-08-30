@@ -51,7 +51,7 @@ html, body {
   pointer-events: none;
 }
 
-/* Falling Petals */
+/* Falling Petals - reduced for performance */
 .petals-container {
   position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden;
 }
@@ -60,7 +60,6 @@ html, body {
   background: linear-gradient(135deg, var(--rose) 0%, var(--rose-soft) 100%);
   border-radius: 60% 20% 55% 35% / 50% 30% 60% 40%;
   opacity: 0;
-  will-change: transform, opacity;
   animation: fall linear infinite;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
@@ -434,10 +433,10 @@ html, body {
       <!-- POLAROIDS -->
       <div class="photos" aria-hidden="true">
         <div class="polaroid p1" id="p1">
-          <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=400&auto=format&fit=crop" alt="Memory 1">
+          <img src="https://files.catbox.moe/12ggti.png" alt="Memory 1" loading="lazy">
         </div>
         <div class="polaroid p2" id="p2">
-          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=400&auto=format&fit=crop" alt="Memory 2">
+          <img src="https://files.catbox.moe/qa5qr0.PNG" alt="Memory 2" loading="lazy">
         </div>
       </div>
 
@@ -517,7 +516,7 @@ html, body {
 const messageText = "You deserve the biggest apology in the world. You always thought everything would go the way it would be. I apologize to you that I couldn't keep our own family complete. That's just one of many apologies you deserve.. Please always remember to be strong and kind even if the world and people are tiring you out. Love you lots <3";
 function initPetals() {
   const container = document.getElementById('petals');
-  for (let i = 0; i < 75; i++) {
+  for (let i = 0; i < 25; i++) {
     const p = document.createElement('div');
     p.className = 'petal';
     const size = 6 + Math.random() * 8;
