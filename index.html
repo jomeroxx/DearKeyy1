@@ -2,617 +2,457 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>DearKeyy1 - Handcrafted Letter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>A Letter to Myself</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Dancing+Script:wght@600;700&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Kalam:wght@300;400;700&family=Dancing+Script:wght@600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f8f3eb;
-  --paper: #fcf8f2;
-  --ink: #2b2420;
-  --ink-light: #4a4039;
-  --rose: #be434c;
-  --rose-soft: #d86971;
-  --gold: #b38b59;
-  --pencil: #3a322d;
-  
-  --font-logo: 'Dancing Script', cursive;
-  --font-hand: 'Caveat', cursive;
-  --font-body: 'Kalam', cursive;
-  --ease: cubic-bezier(.25, .8, .25, 1);
+  --bg: #f3ebe2;
+  --paper: #fdf9f3;
+  --ink: #2c2520;
+  --muted: #7a6f66;
+  --rose: #c45b63;
+  --rose-soft: #e08a92;
+  --gold: #b8956a;
+  --shadow: rgba(44,37,32,.12);
+  --hand: "Kalam", cursive;
+  --caveat: "Caveat", cursive;
+  --logo: "Dancing Script", cursive;
+  --patrick: "Patrick Hand", cursive;
+  --ease: cubic-bezier(.22,1,.36,1);
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { 
-  width: 100%; height: 100%; height: 100dvh; 
-  overflow: hidden; background: var(--bg); 
-  font-family: var(--font-body); color: var(--ink); 
-  -webkit-font-smoothing: antialiased;
-}
-
-/* Canvas Background Texture */
-.canvas {
-  position: absolute; inset: 0;
-  background-color: var(--bg);
-  background-image:
-    radial-gradient(circle at 50% 50%, rgba(245, 215, 205, 0.45), transparent 70%),
-    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,255,255,0.8), transparent),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-  z-index: 0;
-}
-
-.canvas::after {
-  content: ''; position: absolute; inset: 0;
-  background-image: linear-gradient(rgba(43,36,32,0.02) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(43,36,32,0.02) 1px, transparent 1px);
-  background-size: 32px 32px;
-  pointer-events: none;
-}
-
-/* Falling Petals - reduced for performance */
-.petals-container {
-  position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden;
-}
-.petal {
-  position: absolute;
-  background: linear-gradient(135deg, var(--rose) 0%, var(--rose-soft) 100%);
-  border-radius: 60% 20% 55% 35% / 50% 30% 60% 40%;
-  opacity: 0;
-  animation: fall linear infinite;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-@keyframes fall {
-  0% { transform: translate3d(0, -20px, 0) rotate(0deg) scale(0.6); opacity: 0; }
-  12% { opacity: var(--max-op, 0.75); }
-  88% { opacity: var(--max-op, 0.75); }
-  100% { transform: translate3d(var(--x-drift), 105vh, 0) rotate(var(--rot)) scale(1); opacity: 0; }
-}
-
-/* Main Centered Stage Layout */
-.stage {
-  position: relative; 
-  width: min(92vw, 440px); 
+html, body {
+  width: 100%;
+  height: 100%;
   height: 100dvh;
-  margin: 0 auto; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  z-index: 2;
-  padding: 12px;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--hand);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
-
-/* Envelope Container - Perfectly Centered */
-.envelope-wrap {
-  position: relative; 
-  width: 100%; 
-  aspect-ratio: 4/3.1;
-  max-height: clamp(220px, 46dvh, 310px);
-  perspective: 1200px;
-  transition: all 1.2s var(--ease);
-  margin: 0 auto;
+.scene {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 35%, rgba(255,240,235,.55), transparent 65%),
+    radial-gradient(circle at 50% 80%, rgba(255,255,255,.5), transparent 50%),
+    linear-gradient(155deg, #f7f0e7, #e6dcd0);
 }
-.envelope-wrap.open {
-  aspect-ratio: 3/4.25;
-  max-height: clamp(360px, 72dvh, 520px);
-}
-
-.envelope {
-  position: absolute; inset: 0;
-  background: var(--paper);
-  border: 2px solid var(--pencil);
-  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-  box-shadow: 0 12px 30px rgba(43,36,32,0.1);
-  transform-style: preserve-3d;
-  transition: transform 1s var(--ease);
-  filter: url(#sketch);
-}
-
-/* Envelope Front Elements */
-.env-front {
-  position: absolute; inset: 0; z-index: 8;
-  pointer-events: none; transition: opacity 0.6s ease;
-}
-.envelope-wrap.unfold .env-front { opacity: 0; }
-
-.flap-fold-lines {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  z-index: 6; pointer-events: none;
-}
-.flap-fold-lines path {
-  stroke: var(--pencil); stroke-width: 2.5;
-  stroke-linecap: round; fill: none; transition: opacity 0.5s ease;
-}
-.envelope-wrap.unfold .flap-fold-lines { opacity: 0; }
-
-.env-dearkey-left {
-  position: absolute; bottom: 12px; left: 16px;
-  transform: rotate(-3deg); z-index: 9;
-}
-
-.dearkey-logo {
-  position: relative;
-  font-family: var(--font-logo);
-  font-size: clamp(1.4rem, 4.5vw, 1.8rem);
-  font-weight: 700; color: var(--ink);
-  display: inline-flex; align-items: center;
-  letter-spacing: -0.5px; line-height: 1;
-}
-.dearkey-logo .heart-accent {
-  position: absolute; top: -6px; left: 36%;
-  width: 13px; height: 13px; fill: none; stroke: var(--rose);
-  stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
-  transform: rotate(-12deg);
-}
-
-.seal-text {
-  position: absolute; bottom: 12px; right: 18px;
-  font-family: var(--font-hand); font-size: 0.95rem;
-  color: var(--ink-light); z-index: 9;
-  pointer-events: none; transition: opacity 0.4s ease;
-}
-.envelope-wrap.unfold .seal-text { opacity: 0; }
-
-/* Flaps */
-.flap {
-  position: absolute; inset: 0; pointer-events: none;
-  background: var(--paper); border: 1.8px solid var(--pencil);
-  transition: transform 1s var(--ease), opacity 0.5s ease;
-  backface-visibility: hidden;
-}
-.flap-top { clip-path: polygon(0 0, 100% 0, 50% 52%); transform-origin: top center; z-index: 6; }
-.flap-left { clip-path: polygon(0 0, 50% 50%, 0 100%); transform-origin: left center; z-index: 4; }
-.flap-right { clip-path: polygon(100% 0, 100% 100%, 50% 50%); transform-origin: right center; z-index: 4; }
-.flap-bottom { clip-path: polygon(0 100%, 100% 100%, 50% 48%); transform-origin: bottom center; z-index: 5; }
-
-.envelope-wrap.unfold .flap-top { transform: rotateX(-170deg); }
-.envelope-wrap.unfold .flap-left { transform: rotateY(-165deg); transition-delay: 0.15s; }
-.envelope-wrap.unfold .flap-right { transform: rotateY(165deg); transition-delay: 0.3s; }
-.envelope-wrap.unfold .flap-bottom { transform: rotateX(165deg); transition-delay: 0.45s; }
-.envelope-wrap.open .flap { opacity: 0; transition-delay: 1s; }
-
-/* Wax Seal */
-.wax-seal {
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%) rotate(-3deg);
-  z-index: 10; width: 62px; height: 62px;
-  border-radius: 52% 48% 45% 55% / 48% 52% 48% 52%;
-  background: var(--rose); border: 2px solid var(--pencil);
-  box-shadow: 2px 4px 12px rgba(43,36,32,0.15);
-  display: grid; place-items: center;
-  cursor: pointer; transition: transform 0.3s ease, opacity 0.4s ease;
-}
-.wax-seal:hover { transform: translate(-50%, -50%) scale(1.08) rotate(2deg); }
-.wax-seal svg { width: 28px; height: 28px; stroke: #fff; fill: none; }
-.envelope-wrap.unfold .wax-seal { opacity: 0; pointer-events: none; }
-
-/* Letter Paper */
-.letter-paper {
-  position: absolute; inset: 0;
-  background: var(--paper);
-  border: 2px solid var(--pencil);
-  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-  padding: clamp(16px, 3dvh, 24px) clamp(16px, 4vw, 24px) clamp(18px, 3.2dvh, 26px);
-  display: flex; flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  opacity: 0; transform: scale(0.96) translateY(10px);
+.scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .1;
   pointer-events: none;
-  transition: opacity 0.8s ease 0.9s, transform 0.9s var(--ease) 0.9s;
-  z-index: 3;
-  filter: url(#sketch);
-}
-.envelope-wrap.open .letter-paper {
-  opacity: 1; transform: scale(1) translateY(0); pointer-events: auto;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
 }
 
-.letter-paper::before {
-  content: ''; position: absolute; inset: 8px;
-  border: 1.2px dashed rgba(43,36,32,0.15);
-  border-radius: 2px; pointer-events: none;
+/* soft floating hearts */
+.hearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+.heart {
+  position: absolute;
+  font-size: 14px;
+  color: var(--rose-soft);
+  opacity: 0;
+  animation: floatHeart linear infinite;
+}
+@keyframes floatHeart {
+  0%   { transform: translateY(100vh) rotate(0deg) scale(.6); opacity: 0; }
+  10%  { opacity: .45; }
+  90%  { opacity: .45; }
+  100% { transform: translateY(-20vh) rotate(25deg) scale(1); opacity: 0; }
 }
 
-/* Compact Main Body Container */
-.letter-body {
-  width: 100%;
-  margin: auto 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.doodle {
+  position: absolute;
+  font-family: var(--caveat);
+  color: rgba(44,37,32,.2);
+  pointer-events: none;
+  z-index: 2;
+  user-select: none;
 }
+.doodle.one { top: 8%; left: 5%; font-size: clamp(13px, 3vw, 18px); transform: rotate(-6deg); }
+.doodle.two { right: 5%; top: 12%; font-size: clamp(12px, 2.6vw, 16px); transform: rotate(5deg); }
 
-.letter-title {
-  font-family: var(--font-hand);
-  font-size: clamp(1.1rem, 2.3dvh, 1.4rem);
-  font-weight: 700; color: var(--ink);
-  text-align: center; margin-bottom: 2px;
+/* Polaroids – only 2 */
+.photos {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
 }
-
-.letter-line {
-  width: 32px; height: 1.2px; background: var(--ink);
-  margin: 0 auto 8px auto; opacity: 0.25;
-}
-
-.letter-content {
-  font-family: var(--font-body);
-  font-size: clamp(0.88rem, 1.85dvh, 1.02rem);
-  line-height: 1.55; color: var(--ink-light);
-  text-align: center;
-  display: flex; flex-wrap: wrap;
-  align-content: center; justify-content: center;
-  width: 100%;
-}
-.letter-content .w { display: inline-block; white-space: nowrap; }
-.letter-content .c { opacity: 0; display: inline-block; transform: translateY(2px); transition: opacity 0.2s, transform 0.2s; }
-.letter-content .c.show { opacity: 1; transform: translateY(0); }
-
-/* Unobscured Letter Footer */
-.letter-footer {
-  width: 100%;
-  display: flex; align-items: flex-end; justify-content: space-between;
-  padding-top: 4px; z-index: 5;
-}
-
-.letter-dearkey-left { transform: rotate(-3deg); }
-
-.signature-right {
-  font-family: var(--font-hand);
-  font-size: clamp(1.2rem, 2.7dvh, 1.55rem);
-  font-weight: 700; color: var(--rose);
-  transform: rotate(-2deg);
-}
-
-/* Polaroid Photos */
-.photos { position: absolute; inset: 0; pointer-events: none; z-index: 7; }
 .polaroid {
   position: absolute;
-  width: clamp(115px, 29vw, 160px);
-  padding: 6px 6px 20px 6px;
+  width: clamp(100px, 24vw, 140px);
   background: var(--paper);
-  border: 2px solid var(--pencil);
-  box-shadow: 4px 8px 20px rgba(43,36,32,0.18);
-  opacity: 0; transform: scale(0.4) translateY(12px);
-  transition: all 1.2s var(--ease);
-  filter: url(#sketch);
+  padding: 7px 7px 22px;
+  border: 1.5px solid var(--ink);
+  box-shadow: 4px 8px 18px var(--shadow);
+  opacity: 0;
+  transform: scale(.4);
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
 }
 .polaroid img {
-  width: 100%; height: clamp(90px, 22vw, 125px);
-  object-fit: cover; display: block; border: 1px solid rgba(43,36,32,0.12);
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  border: 1px solid rgba(44,37,32,.1);
 }
-.polaroid.p1 { top: -35px; left: -32px; }
-.polaroid.p2 { top: -35px; right: -32px; }
+.polaroid .cap {
+  font-family: var(--caveat);
+  font-size: clamp(12px, 2.6vw, 14px);
+  text-align: center;
+  margin-top: 6px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.polaroid.p1 { top: 7%; left: 4%; }
+.polaroid.p2 { bottom: 9%; right: 4%; }
 
-.envelope-wrap.open .polaroid.p1.pop {
-  opacity: 1; transform: translate(-8px, -8px) rotate(-11deg) scale(1);
-}
-.envelope-wrap.open .polaroid.p2.pop {
-  opacity: 1; transform: translate(8px, -8px) rotate(10deg) scale(1);
-}
+.photos.show .p1 { opacity: 1; transform: rotate(-9deg) scale(1); transition-delay: .25s; }
+.photos.show .p2 { opacity: 1; transform: rotate(8deg) scale(1); transition-delay: .45s; }
 
-/* Characters shifted outward to completely avoid overlapping text */
-.bottom-characters-wrap {
+/* Letter */
+.letter-wrap {
   position: absolute;
-  bottom: -48px; left: 0; right: 0;
-  height: 60px;
-  pointer-events: none; z-index: 8;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom));
+  z-index: 5;
 }
-
-.character-art {
+.letter {
+  width: min(90vw, 400px);
+  max-height: min(84dvh, 640px);
+  background: var(--paper);
+  border: 1.7px solid var(--ink);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  box-shadow:
+    5px 10px 0 rgba(44,37,32,.05),
+    0 18px 40px var(--shadow);
+  padding: clamp(22px, 4.2vw, 34px) clamp(20px, 4vw, 30px) clamp(24px, 4vw, 32px);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transform: rotate(-.4deg);
+  animation: enter 1.05s var(--ease) both;
+}
+@keyframes enter {
+  from { opacity: 0; transform: rotate(-.4deg) translateY(26px) scale(.97); }
+  to   { opacity: 1; transform: rotate(-.4deg) translateY(0) scale(1); }
+}
+.letter::before {
+  content: "";
   position: absolute;
-  bottom: -6px;
-  width: clamp(75px, 20vw, 105px);
-  height: clamp(85px, 22vw, 115px);
-  transform: scale(0); transform-origin: bottom center;
-  transition: transform 1.3s var(--ease), opacity 1.3s ease;
-  opacity: 0; filter: url(#sketch);
-}
-/* Yellow Pompompurin shifted left */
-.character-art.left { left: -48px; transform-origin: bottom left; }
-/* Pink Bunny shifted right */
-.character-art.right { right: -48px; transform-origin: bottom right; }
-
-.envelope-wrap.open .character-art.pop { opacity: 1; }
-.envelope-wrap.open .character-art.left.pop { transform: scale(1) rotate(-5deg); }
-.envelope-wrap.open .character-art.right.pop { transform: scale(1) rotate(5deg); }
-.character-art svg { width: 100%; height: 100%; }
-
-/* "With All My Heart" Message placed centrally between characters */
-.footer-text {
-  position: absolute;
-  left: 50%; bottom: 6px;
-  transform: translateX(-50%) rotate(-0.6deg);
-  font-family: var(--font-hand); 
-  font-size: clamp(1.1rem, 2.5dvh, 1.45rem);
-  color: var(--gold); font-weight: 700;
-  white-space: nowrap; z-index: 10;
-  opacity: 0; transition: opacity 0.8s ease, transform 0.8s ease;
-}
-.footer-text.show { 
-  opacity: 1; 
-  transform: translateX(-50%) translateY(-2px) rotate(-0.6deg); 
+  inset: 10px;
+  border: 1px dashed rgba(44,37,32,.13);
+  border-radius: 2px;
+  pointer-events: none;
 }
 
-/* Audio Control Button */
+.letter-top {
+  text-align: center;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+.letter-top .date {
+  font-family: var(--patrick);
+  font-size: clamp(10px, 2.1vw, 12px);
+  color: var(--muted);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.letter-top h1 {
+  font-family: var(--caveat);
+  font-size: clamp(28px, 7vw, 40px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+}
+.letter-top .line {
+  width: 34px;
+  height: 1.5px;
+  background: var(--rose);
+  opacity: .5;
+  margin: 10px auto 0;
+  border-radius: 1px;
+}
+
+.letter-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-right: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(44,37,32,.15) transparent;
+}
+.letter-body p {
+  font-size: clamp(14px, 3.2vw, 16px);
+  line-height: 1.7;
+  color: var(--ink);
+  margin-bottom: 13px;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: rise .7s var(--ease) forwards;
+}
+.letter-body p:nth-child(1) { animation-delay: .32s; }
+.letter-body p:nth-child(2) { animation-delay: .46s; }
+.letter-body p:nth-child(3) { animation-delay: .6s; }
+.letter-body p:nth-child(4) { animation-delay: .74s; }
+.letter-body p:nth-child(5) { animation-delay: .88s; }
+.letter-body p:nth-child(6) { animation-delay: 1.02s; }
+@keyframes rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+.letter-body .highlight {
+  color: var(--rose);
+  font-weight: 500;
+}
+.letter-body .soft {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.letter-footer {
+  margin-top: 18px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 6px;
+}
+.letter-footer .from {
+  font-family: var(--caveat);
+  font-size: clamp(18px, 4vw, 24px);
+  color: var(--rose);
+  transform: rotate(-2deg);
+  opacity: 0;
+  animation: rise .75s var(--ease) 1.2s forwards;
+}
+.letter-footer .seal {
+  width: 40px;
+  height: 40px;
+  border-radius: 52% 48% 48% 52% / 48% 52% 48% 52%;
+  background: var(--rose);
+  border: 1.6px solid var(--ink);
+  display: grid;
+  place-items: center;
+  box-shadow: 2px 4px 0 rgba(44,37,32,.1);
+  opacity: 0;
+  animation: rise .75s var(--ease) 1.35s forwards;
+}
+.letter-footer .seal svg {
+  width: 17px;
+  height: 17px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 1.8;
+}
+
+/* Made by DearKey */
+.brand {
+  position: fixed;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  font-family: var(--logo);
+  font-size: clamp(15px, 3.5vw, 18px);
+  font-weight: 700;
+  color: var(--ink);
+  opacity: 0;
+  animation: rise .8s var(--ease) 1.7s forwards;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+.brand .heart {
+  width: 12px;
+  height: 12px;
+  stroke: var(--rose);
+  fill: none;
+  stroke-width: 2;
+  transform: translateY(-1px);
+}
+
+/* Music */
 .music-btn {
-  position: fixed; bottom: 16px; right: 16px; z-index: 20;
-  background: var(--paper); border: 1.5px solid var(--pencil);
-  border-radius: 20px; padding: 6px 14px;
-  font-family: var(--font-hand); font-size: 0.95rem; font-weight: 600;
-  color: var(--ink); cursor: pointer; display: flex; align-items: center; gap: 6px;
-  box-shadow: 2px 3px 8px rgba(0,0,0,0.06);
-  transition: transform 0.2s ease;
-  filter: url(#sketch);
+  position: fixed;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  right: max(14px, env(safe-area-inset-right));
+  z-index: 20;
+  background: var(--paper);
+  border: 1.4px solid var(--ink);
+  border-radius: 20px;
+  padding: 6px 13px;
+  font-family: var(--patrick);
+  font-size: 12.5px;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 2px 3px 0 rgba(44,37,32,.06);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: transform .2s ease;
+  opacity: 0;
+  animation: rise .6s var(--ease) 1.6s forwards;
 }
 .music-btn:hover { transform: scale(1.05); }
 
-@media(max-width: 400px) {
-  .polaroid.p1 { top: -25px; left: -16px; }
-  .polaroid.p2 { top: -25px; right: -16px; }
-  .character-art.left { left: -36px; }
-  .character-art.right { right: -36px; }
-  .bottom-characters-wrap { bottom: -42px; }
+@media (max-width: 480px) {
+  .polaroid { width: clamp(82px, 22vw, 110px); }
+  .polaroid.p1 { top: 4%; left: 2%; }
+  .polaroid.p2 { bottom: 7%; right: 2%; }
+}
+@media (max-width: 360px) {
+  .polaroid { width: 72px; }
+  .letter { padding: 18px 15px 20px; }
+}
+@media (min-width: 900px) {
+  .letter { width: 390px; }
+  .polaroid { width: 130px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .letter, .letter-body p, .letter-footer .from, .letter-footer .seal,
+  .polaroid, .music-btn, .brand, .heart { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .photos.show .polaroid { transform: none; }
 }
 </style>
 </head>
 <body>
+<div class="scene">
+  <div class="hearts" id="hearts"></div>
 
-<svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
-  <defs>
-    <filter id="sketch">
-      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" result="noise" />
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G" />
-    </filter>
-  </defs>
-</svg>
+  <div class="doodle one">you are loved</div>
+  <div class="doodle two">be soft with yourself</div>
 
-<div class="canvas" aria-hidden="true"></div>
-<div class="petals-container" id="petals" aria-hidden="true"></div>
-
-<main class="stage">
-  <div class="envelope-wrap" id="envelopeWrap">
-    <div class="envelope" id="envelope">
-
-      <!-- FRONT OF ENVELOPE -->
-      <div class="env-front">
-        <div class="env-dearkey-left">
-          <div class="dearkey-logo">
-            DearKey
-            <svg class="heart-accent" viewBox="0 0 24 24">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-          </div>
-        </div>
-
-        <span class="seal-text" id="sealText">Touch seal to open</span>
-      </div>
-
-      <!-- Hand-drawn Flap Fold Lines -->
-      <svg class="flap-fold-lines" viewBox="0 0 400 300" preserveAspectRatio="none">
-        <path d="M 4 4 Q 130 95 180 142 M 396 4 Q 270 95 220 142" />
-      </svg>
-
-      <!-- Envelope Flaps -->
-      <div class="flap flap-top"></div>
-      <div class="flap flap-left"></div>
-      <div class="flap flap-right"></div>
-      <div class="flap flap-bottom"></div>
-
-      <!-- Wax Seal -->
-      <button class="wax-seal" id="waxSeal" onclick="openEnvelope()" aria-label="Open Letter">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-        </svg>
-      </button>
-
-      <!-- INSIDE LETTER PAPER -->
-      <article class="letter-paper" id="letterPaper">
-        
-        <div class="letter-body">
-          <h1 class="letter-title">To My Dearest Self,</h1>
-          <div class="letter-line"></div>
-          <div class="letter-content" id="letterContent"></div>
-        </div>
-
-        <div class="letter-footer">
-          <div class="letter-dearkey-left">
-            <div class="dearkey-logo" style="font-size: 1.3rem;">
-              DearKey
-              <svg class="heart-accent" viewBox="0 0 24 24" style="width: 10px; height: 10px; top: -4px;">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-            </div>
-          </div>
-
-          <div class="signature-right">
-            Love you lots <3
-          </div>
-        </div>
-      </article>
-
-      <!-- POLAROIDS -->
-      <div class="photos" aria-hidden="true">
-        <div class="polaroid p1" id="p1">
-          <img src="https://files.catbox.moe/12ggti.png" alt="Memory 1" loading="lazy">
-        </div>
-        <div class="polaroid p2" id="p2">
-          <img src="https://files.catbox.moe/qa5qr0.PNG" alt="Memory 2" loading="lazy">
-        </div>
-      </div>
-
-      <!-- CHARACTERS & "WITH ALL MY HEART" TEXT -->
-      <div class="bottom-characters-wrap">
-        <!-- Yellow Pompompurin holding flowers (Shifted Left) -->
-        <div class="character-art left" id="pompompurin" aria-hidden="true">
-          <svg viewBox="0 0 160 180" fill="none" stroke="#3a322d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M 45 155 Q 30 150 32 105 Q 35 60 80 58 Q 125 60 128 105 Q 130 150 115 155 Z" fill="#f8e59e"/>
-            <path d="M 42 68 Q 18 62 20 88 Q 30 94 40 80 Z" fill="#f8e59e"/>
-            <path d="M 118 68 Q 142 62 140 88 Q 130 94 120 80 Z" fill="#f8e59e"/>
-            <ellipse cx="55" cy="158" rx="12" ry="7" fill="#f8e59e"/>
-            <ellipse cx="105" cy="158" rx="12" ry="7" fill="#f8e59e"/>
-            <path d="M 60 58 C 55 42 105 42 100 58 Z" fill="#5c3a24"/>
-            <path d="M 80 44 L 80 37" fill="none" stroke="#5c3a24" stroke-width="2.5"/>
-            <circle cx="80" cy="35" r="3" fill="#5c3a24" stroke="none"/>
-            <circle cx="62" cy="86" r="2.5" fill="#3a322d" stroke="none"/>
-            <circle cx="98" cy="86" r="2.5" fill="#3a322d" stroke="none"/>
-            <path d="M 77 90 Q 80 87 83 90 Q 80 94 77 90" fill="#3a322d" stroke="none"/>
-            <path d="M 75 94 Q 80 98 85 94" fill="none"/>
-            <ellipse cx="54" cy="92" rx="5" ry="3" fill="#f7a8b8" stroke="none" opacity="0.7"/>
-            <ellipse cx="106" cy="92" rx="5" ry="3" fill="#f7a8b8" stroke="none" opacity="0.7"/>
-            <path d="M 42 110 Q 60 118 70 122" fill="none"/>
-            <path d="M 118 110 Q 100 118 90 122" fill="none"/>
-            <g transform="translate(80,122)">
-              <path d="M -20 0 L 0 35 L 20 0 Q 25 -15 0 -15 Q -25 -15 -20 0 Z" fill="#fcf8f2"/>
-              <path d="M -12 -12 C -18 -25 2 -30 10 -15 C 15 -10 0 5 -12 -12 Z" fill="#be434c"/>
-              <circle cx="0" cy="-18" r="3" fill="#d86971"/>
-              <path d="M 2 -10 C 12 -22 25 -12 14 -2 C 8 4 -5 -5 2 -10 Z" fill="#be434c"/>
-              <path d="M -15 -5 Q -22 -15 -10 -20" fill="none" stroke="#3a6a4c" stroke-width="1.8"/>
-            </g>
-          </svg>
-        </div>
-
-        <!-- "With All My Heart" Message appears smoothly after typewriter finishes -->
-        <p class="footer-text" id="footerText">With All My Heart</p>
-
-        <!-- Cute Pink Bunny holding flowers (Shifted Right) -->
-        <div class="character-art right" id="bunny" aria-hidden="true">
-          <svg viewBox="0 0 160 180" fill="none" stroke="#3a322d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M 52 65 Q 32 10 52 15 Q 65 35 60 65 Z" fill="#fcf8f2"/>
-            <path d="M 48 55 Q 38 20 50 22 Q 58 35 55 55 Z" fill="#f8c8dc" stroke="none"/>
-            <path d="M 108 65 Q 128 10 108 15 Q 95 35 100 65 Z" fill="#fcf8f2"/>
-            <path d="M 112 55 Q 122 20 110 22 Q 102 35 105 55 Z" fill="#f8c8dc" stroke="none"/>
-            <path d="M 45 155 Q 32 150 35 105 Q 38 65 80 65 Q 122 65 125 105 Q 128 150 115 155 Z" fill="#fcf8f2"/>
-            <ellipse cx="55" cy="158" rx="11" ry="6" fill="#fcf8f2"/>
-            <ellipse cx="105" cy="158" rx="11" ry="6" fill="#fcf8f2"/>
-            <circle cx="62" cy="88" r="2.5" fill="#3a322d" stroke="none"/>
-            <circle cx="98" cy="88" r="2.5" fill="#3a322d" stroke="none"/>
-            <path d="M 78 92 L 82 92 L 80 95 Z" fill="#f8c8dc" stroke="none"/>
-            <path d="M 76 96 Q 80 99 84 96" fill="none"/>
-            <ellipse cx="54" cy="94" rx="5" ry="3" fill="#f7a8b8" stroke="none" opacity="0.7"/>
-            <ellipse cx="106" cy="94" rx="5" ry="3" fill="#f7a8b8" stroke="none" opacity="0.7"/>
-            <path d="M 42 112 Q 60 120 70 124" fill="none"/>
-            <path d="M 118 112 Q 100 120 90 124" fill="none"/>
-            <g transform="translate(80,124)">
-              <path d="M -18 0 L 0 32 L 18 0 Q 22 -14 0 -14 Q -22 -14 -18 0 Z" fill="#f8f3eb"/>
-              <path d="M -10 -10 C -15 -22 2 -26 8 -12 C 12 -8 0 4 -10 -10 Z" fill="#d86971"/>
-              <path d="M 2 -8 C 10 -18 20 -10 12 -1 C 7 3 -3 -4 2 -8 Z" fill="#be434c"/>
-              <circle cx="0" cy="-14" r="2.5" fill="#fff"/>
-            </g>
-          </svg>
-        </div>
-      </div>
-
+  <div class="photos" id="photos">
+    <div class="polaroid p1">
+      <img src="https://files.catbox.moe/12ggti.png" alt="" loading="lazy">
+      <div class="cap">gentle days</div>
+    </div>
+    <div class="polaroid p2">
+      <img src="https://files.catbox.moe/qa5qr0.PNG" alt="" loading="lazy">
+      <div class="cap">still becoming</div>
     </div>
   </div>
-</main>
 
-<button class="music-btn" id="musicBtn" onclick="toggleMusic()">
-  <span id="musicIcon">♫</span> <span id="musicText">Play Song</span>
+  <div class="letter-wrap">
+    <article class="letter">
+      <header class="letter-top">
+        <div class="date">a quiet note to my heart</div>
+        <h1>To Myself,</h1>
+        <div class="line"></div>
+      </header>
+
+      <div class="letter-body">
+        <p>Some days feel heavier than they should. Some nights you wonder if you’re enough, if the quiet means you’ve stopped growing.</p>
+        <p>But look at you. You’re still here. Still choosing to try. Still opening your eyes even when the weight sits on your chest.</p>
+        <p>You don’t need to be perfect to be worthy. You don’t need all the answers to deserve rest. The soft, tired version of you that keeps showing up is already enough.</p>
+        <p class="highlight">Be gentle with the parts of you that are still healing.</p>
+        <p>The path ahead doesn’t ask for perfection — only that you keep walking. Slowly is still progress. Quietly is still brave.</p>
+        <p class="soft">I’m proud of you. Even on the days you can’t feel it yet. Especially then.</p>
+      </div>
+
+      <footer class="letter-footer">
+        <div class="from">— with all my love</div>
+        <div class="seal" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+      </footer>
+    </article>
+  </div>
+</div>
+
+<div class="brand">
+  made by DearKey
+  <svg class="heart" viewBox="0 0 24 24">
+    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+  </svg>
+</div>
+
+<button class="music-btn" id="musicBtn" aria-label="Toggle music">
+  <span>♫</span>
+  <span id="musicText">Pause Song</span>
 </button>
 
-<audio id="bgMusic" loop preload="none" src="https://files.catbox.moe/enwtbc.mp3"></audio>
+<audio id="bgMusic" loop preload="auto" src="https://files.catbox.moe/enwtbc.mp3"></audio>
 
 <script>
-const messageText = "You deserve the biggest apology in the world. You always thought everything would go the way it would be. I apologize to you that I couldn't keep our own family complete. That's just one of many apologies you deserve.. Please always remember to be strong and kind even if the world and people are tiring you out. Love you lots <3";
-function initPetals() {
-  const container = document.getElementById('petals');
-  for (let i = 0; i < 25; i++) {
-    const p = document.createElement('div');
-    p.className = 'petal';
-    const size = 6 + Math.random() * 8;
-    p.style.width = size + 'px';
-    p.style.height = (size * 1.35) + 'px';
-    p.style.left = Math.random() * 100 + 'vw';
-    p.style.setProperty('--x-drift', (Math.random() * 120 - 60) + 'px');
-    p.style.setProperty('--rot', (Math.random() * 360) + 'deg');
-    p.style.setProperty('--max-op', (0.35 + Math.random() * 0.5));
-    p.style.animationDuration = (5 + Math.random() * 8) + 's';
-    p.style.animationDelay = (Math.random() * 10) + 's';
-    container.appendChild(p);
-  }
+const audio = document.getElementById("bgMusic");
+const btn = document.getElementById("musicBtn");
+const label = document.getElementById("musicText");
+let playing = false;
+
+function updateUI() {
+  label.textContent = playing ? "Pause Song" : "Play Song";
 }
-initPetals();
 
-let opened = false;
-let isPlaying = false;
-const audio = document.getElementById('bgMusic');
-
-function openEnvelope() {
-  if (opened) return;
-  opened = true;
-
-  const envWrap = document.getElementById('envelopeWrap');
-  envWrap.classList.add('unfold');
-  
-  setTimeout(() => {
-    envWrap.classList.add('open');
-  }, 900);
-
-  setTimeout(() => {
-    document.getElementById('p1').classList.add('pop');
-    document.getElementById('p2').classList.add('pop');
-    document.getElementById('pompompurin').classList.add('pop');
-    document.getElementById('bunny').classList.add('pop');
-  }, 1100);
-
-  setTimeout(() => {
-    startTypewriter();
-  }, 1500);
-
+function tryPlay() {
   audio.volume = 0.3;
   audio.play().then(() => {
-    isPlaying = true;
-    updateMusicUI();
-  }).catch(() => {});
-}
-
-function startTypewriter() {
-  const content = document.getElementById('letterContent');
-  content.innerHTML = '';
-  const words = messageText.split(' ');
-
-  words.forEach((word) => {
-    const wSpan = document.createElement('span');
-    wSpan.className = 'w';
-    Array.from(word).forEach((char) => {
-      const cSpan = document.createElement('span');
-      cSpan.className = 'c';
-      cSpan.textContent = char;
-      wSpan.appendChild(cSpan);
-    });
-    content.appendChild(wSpan);
-    const space = document.createElement('span');
-    space.className = 'w';
-    space.innerHTML = '&nbsp;';
-    content.appendChild(space);
+    playing = true;
+    updateUI();
+  }).catch(() => {
+    playing = false;
+    updateUI();
+    const unlock = () => {
+      audio.play().then(() => { playing = true; updateUI(); }).catch(() => {});
+      document.removeEventListener("click", unlock);
+      document.removeEventListener("touchstart", unlock);
+    };
+    document.addEventListener("click", unlock, { once: true });
+    document.addEventListener("touchstart", unlock, { once: true });
   });
+}
 
-  const chars = content.querySelectorAll('.c');
-  let index = 0;
+btn.addEventListener("click", () => {
+  if (playing) { audio.pause(); playing = false; }
+  else { audio.play().then(() => { playing = true; }).catch(() => {}); }
+  updateUI();
+});
 
-  function typeNext() {
-    if (index >= chars.length) {
-      document.getElementById('footerText').classList.add('show');
-      return;
-    }
-    chars[index].classList.add('show');
-    const ch = chars[index].textContent;
-    index++;
-    setTimeout(typeNext, (ch === '.' || ch === ',' || ch === '—') ? 180 : 20 + Math.random() * 15);
+// floating hearts
+(function createHearts() {
+  const container = document.getElementById("hearts");
+  const count = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 4 : 12;
+  for (let i = 0; i < count; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = "♥";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.fontSize = (10 + Math.random() * 10) + "px";
+    h.style.animationDuration = (9 + Math.random() * 10) + "s";
+    h.style.animationDelay = (Math.random() * 8) + "s";
+    container.appendChild(h);
   }
-  typeNext();
-}
+})();
 
-function toggleMusic() {
-  if (isPlaying) audio.pause();
-  else audio.play();
-  isPlaying = !isPlaying;
-  updateMusicUI();
-}
-
-function updateMusicUI() {
-  document.getElementById('musicText').textContent = isPlaying ? 'Pause Song' : 'Play Song';
-}
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("photos").classList.add("show");
+    tryPlay();
+  }, 350);
+});
 </script>
 </body>
 </html>
