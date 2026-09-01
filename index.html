@@ -69,24 +69,29 @@ html, body {
   animation: floatHeart linear infinite;
 }
 @keyframes floatHeart {
-  0%   { transform: translateY(100vh) rotate(0deg) scale(.6); opacity: 0; }
-  10%  { opacity: .45; }
-  90%  { opacity: .45; }
-  100% { transform: translateY(-20vh) rotate(25deg) scale(1); opacity: 0; }
+  0%   { transform: translateY(100vh) rotate(0deg) scale(.55); opacity: 0; }
+  12%  { opacity: .4; }
+  88%  { opacity: .4; }
+  100% { transform: translateY(-18vh) rotate(22deg) scale(1); opacity: 0; }
 }
 
 .doodle {
   position: absolute;
   font-family: var(--caveat);
-  color: rgba(44,37,32,.2);
+  color: rgba(44,37,32,.18);
   pointer-events: none;
   z-index: 2;
   user-select: none;
+  opacity: 0;
+  animation: fadeIn 1.4s var(--ease) 1.8s forwards;
 }
 .doodle.one { top: 8%; left: 5%; font-size: clamp(13px, 3vw, 18px); transform: rotate(-6deg); }
 .doodle.two { right: 5%; top: 12%; font-size: clamp(12px, 2.6vw, 16px); transform: rotate(5deg); }
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
 
-/* Polaroids – only 2 */
+/* Polaroids */
 .photos {
   position: absolute;
   inset: 0;
@@ -101,8 +106,8 @@ html, body {
   border: 1.5px solid var(--ink);
   box-shadow: 4px 8px 18px var(--shadow);
   opacity: 0;
-  transform: scale(.4);
-  transition: opacity 1s var(--ease), transform 1s var(--ease);
+  transform: scale(.55) translateY(12px);
+  transition: opacity 1.1s var(--ease), transform 1.1s var(--ease);
 }
 .polaroid img {
   width: 100%;
@@ -122,8 +127,8 @@ html, body {
 .polaroid.p1 { top: 7%; left: 4%; }
 .polaroid.p2 { bottom: 9%; right: 4%; }
 
-.photos.show .p1 { opacity: 1; transform: rotate(-9deg) scale(1); transition-delay: .25s; }
-.photos.show .p2 { opacity: 1; transform: rotate(8deg) scale(1); transition-delay: .45s; }
+.photos.show .p1 { opacity: 1; transform: rotate(-9deg) scale(1) translateY(0); transition-delay: .35s; }
+.photos.show .p2 { opacity: 1; transform: rotate(8deg) scale(1) translateY(0); transition-delay: .55s; }
 
 /* Letter */
 .letter-wrap {
@@ -150,10 +155,10 @@ html, body {
   position: relative;
   overflow: hidden;
   transform: rotate(-.4deg);
-  animation: enter 1.05s var(--ease) both;
+  animation: enter 1.15s var(--ease) both;
 }
 @keyframes enter {
-  from { opacity: 0; transform: rotate(-.4deg) translateY(26px) scale(.97); }
+  from { opacity: 0; transform: rotate(-.4deg) translateY(28px) scale(.96); }
   to   { opacity: 1; transform: rotate(-.4deg) translateY(0) scale(1); }
 }
 .letter::before {
@@ -198,23 +203,30 @@ html, body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  padding-right: 2px;
+  padding-right: 4px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(44,37,32,.15) transparent;
+  scrollbar-color: rgba(44,37,32,.12) transparent;
+}
+.letter-body::-webkit-scrollbar {
+  width: 3px;
+}
+.letter-body::-webkit-scrollbar-thumb {
+  background: rgba(44,37,32,.15);
+  border-radius: 3px;
 }
 .letter-body p {
   font-size: clamp(14px, 3.2vw, 16px);
-  line-height: 1.7;
+  line-height: 1.72;
   color: var(--ink);
   margin-bottom: 13px;
   opacity: 0;
-  transform: translateY(8px);
-  animation: rise .7s var(--ease) forwards;
+  transform: translateY(10px);
+  animation: rise .8s var(--ease) forwards;
 }
-.letter-body p:nth-child(1) { animation-delay: .32s; }
-.letter-body p:nth-child(2) { animation-delay: .46s; }
-.letter-body p:nth-child(3) { animation-delay: .6s; }
-.letter-body p:nth-child(4) { animation-delay: .74s; }
+.letter-body p:nth-child(1) { animation-delay: .4s; }
+.letter-body p:nth-child(2) { animation-delay: .55s; }
+.letter-body p:nth-child(3) { animation-delay: .7s; }
+.letter-body p:nth-child(4) { animation-delay: .85s; }
 @keyframes rise {
   to { opacity: 1; transform: translateY(0); }
 }
@@ -241,11 +253,13 @@ html, body {
   color: var(--rose);
   transform: rotate(-2deg);
   opacity: 0;
-  animation: rise .75s var(--ease) 1.2s forwards;
+  animation: rise .85s var(--ease) 1.15s forwards;
 }
+
+/* Interactive Seal / Heart */
 .letter-footer .seal {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 52% 48% 48% 52% / 48% 52% 48% 52%;
   background: var(--rose);
   border: 1.6px solid var(--ink);
@@ -253,14 +267,60 @@ html, body {
   place-items: center;
   box-shadow: 2px 4px 0 rgba(44,37,32,.1);
   opacity: 0;
-  animation: rise .75s var(--ease) 1.35s forwards;
+  animation: rise .85s var(--ease) 1.3s forwards;
+  cursor: pointer;
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease), background .3s ease;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.letter-footer .seal:hover,
+.letter-footer .seal:focus-visible {
+  transform: scale(1.12);
+  box-shadow: 3px 6px 0 rgba(44,37,32,.12);
+}
+.letter-footer .seal:active {
+  transform: scale(.94);
+}
+.letter-footer .seal.playing {
+  background: #a84850;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); box-shadow: 2px 4px 0 rgba(44,37,32,.1); }
+  50% { transform: scale(1.08); box-shadow: 3px 7px 12px rgba(196,91,99,.25); }
 }
 .letter-footer .seal svg {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
   stroke: #fff;
   fill: none;
   stroke-width: 1.8;
+  transition: fill .3s ease;
+  pointer-events: none;
+}
+.letter-footer .seal.playing svg {
+  fill: rgba(255,255,255,.25);
+}
+
+/* subtle hint under seal */
+.seal-hint {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--patrick);
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+  opacity: 0;
+  animation: fadeIn 1s var(--ease) 2.2s forwards;
+  pointer-events: none;
+  transition: opacity .4s ease;
+}
+.letter-footer .seal.playing + .seal-hint,
+.letter-footer .seal:hover + .seal-hint {
+  opacity: 0;
 }
 
 /* Made by DearKey */
@@ -275,7 +335,7 @@ html, body {
   font-weight: 700;
   color: var(--ink);
   opacity: 0;
-  animation: rise .8s var(--ease) 1.7s forwards;
+  animation: rise .9s var(--ease) 1.9s forwards;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -290,10 +350,10 @@ html, body {
   transform: translateY(-1px);
 }
 
-/* Music */
+/* Music button (secondary) */
 .music-btn {
   position: fixed;
-  bottom: max(14px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
   right: max(14px, env(safe-area-inset-right));
   z-index: 20;
   background: var(--paper);
@@ -308,11 +368,12 @@ html, body {
   display: flex;
   align-items: center;
   gap: 5px;
-  transition: transform .2s ease;
+  transition: transform .25s var(--ease), opacity .4s ease;
   opacity: 0;
-  animation: rise .6s var(--ease) 1.6s forwards;
+  animation: rise .7s var(--ease) 1.8s forwards;
 }
 .music-btn:hover { transform: scale(1.05); }
+.music-btn:active { transform: scale(.97); }
 
 @media (max-width: 480px) {
   .polaroid { width: clamp(82px, 22vw, 110px); }
@@ -329,8 +390,9 @@ html, body {
 }
 @media (prefers-reduced-motion: reduce) {
   .letter, .letter-body p, .letter-footer .from, .letter-footer .seal,
-  .polaroid, .music-btn, .brand, .heart { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .polaroid, .music-btn, .brand, .heart, .doodle { animation: none !important; opacity: 1 !important; transform: none !important; }
   .photos.show .polaroid { transform: none; }
+  .letter-footer .seal.playing { animation: none; }
 }
 </style>
 </head>
@@ -369,10 +431,13 @@ html, body {
 
       <footer class="letter-footer">
         <div class="from">— with all my love</div>
-        <div class="seal" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
+        <div style="position: relative;">
+          <button class="seal" id="sealBtn" aria-label="Play or pause the song">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </button>
+          <span class="seal-hint">tap me</span>
         </div>
       </footer>
     </article>
@@ -388,57 +453,66 @@ html, body {
 
 <button class="music-btn" id="musicBtn" aria-label="Toggle music">
   <span>♫</span>
-  <span id="musicText">Pause Song</span>
+  <span id="musicText">Play Song</span>
 </button>
 
 <audio id="bgMusic" loop preload="auto" src="https://files.catbox.moe/enwtbc.mp3"></audio>
 
 <script>
 const audio = document.getElementById("bgMusic");
-const btn = document.getElementById("musicBtn");
+const sealBtn = document.getElementById("sealBtn");
+const musicBtn = document.getElementById("musicBtn");
 const label = document.getElementById("musicText");
 let playing = false;
 
+audio.volume = 0.32;
+
 function updateUI() {
   label.textContent = playing ? "Pause Song" : "Play Song";
+  sealBtn.classList.toggle("playing", playing);
 }
 
-function tryPlay() {
-  audio.volume = 0.3;
-  audio.play().then(() => {
-    playing = true;
-    updateUI();
-  }).catch(() => {
+function toggleMusic() {
+  if (playing) {
+    audio.pause();
     playing = false;
-    updateUI();
-    const unlock = () => {
-      audio.play().then(() => { playing = true; updateUI(); }).catch(() => {});
-      document.removeEventListener("click", unlock);
-      document.removeEventListener("touchstart", unlock);
-    };
-    document.addEventListener("click", unlock, { once: true });
-    document.addEventListener("touchstart", unlock, { once: true });
-  });
+  } else {
+    audio.play().then(() => {
+      playing = true;
+      updateUI();
+    }).catch(() => {
+      playing = false;
+      updateUI();
+    });
+    return;
+  }
+  updateUI();
 }
 
-btn.addEventListener("click", () => {
-  if (playing) { audio.pause(); playing = false; }
-  else { audio.play().then(() => { playing = true; }).catch(() => {}); }
-  updateUI();
+// Main interaction: tap the heart seal
+sealBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  toggleMusic();
+});
+
+// Secondary music button
+musicBtn.addEventListener("click", () => {
+  toggleMusic();
 });
 
 // floating hearts
 (function createHearts() {
   const container = document.getElementById("hearts");
-  const count = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 4 : 12;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const count = reduced ? 4 : 11;
   for (let i = 0; i < count; i++) {
     const h = document.createElement("div");
     h.className = "heart";
     h.textContent = "♥";
     h.style.left = Math.random() * 100 + "%";
-    h.style.fontSize = (10 + Math.random() * 10) + "px";
-    h.style.animationDuration = (9 + Math.random() * 10) + "s";
-    h.style.animationDelay = (Math.random() * 8) + "s";
+    h.style.fontSize = (9 + Math.random() * 11) + "px";
+    h.style.animationDuration = (10 + Math.random() * 9) + "s";
+    h.style.animationDelay = (Math.random() * 9) + "s";
     container.appendChild(h);
   }
 })();
@@ -446,8 +520,7 @@ btn.addEventListener("click", () => {
 window.addEventListener("load", () => {
   setTimeout(() => {
     document.getElementById("photos").classList.add("show");
-    tryPlay();
-  }, 350);
+  }, 400);
 });
 </script>
 </body>
